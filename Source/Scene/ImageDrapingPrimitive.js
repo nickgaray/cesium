@@ -1,101 +1,54 @@
-/*global define*/
-
-define([
-    '../Core/BoundingSphere',
-    '../Core/buildModuleUrl',
-    '../Core/Cartesian2',
-    '../Core/Cartesian3',
-    '../Core/Cartographic',
-    '../Core/combine',
-    '../Core/ColorGeometryInstanceAttribute',
-    '../Core/defaultValue',
-    '../Core/defined',
-    '../Core/defineProperties',
-    '../Core/destroyObject',
-    '../Core/DeveloperError',
-    '../Core/EncodedCartesian3',
-    '../Core/Ellipsoid',
-    '../Core/GeographicTilingScheme',
-    '../Core/GeometryInstance',
-    '../Core/IntersectionTests',
-    '../Core/isArray',
-    '../Core/loadJson',
-    '../Core/Math',
-    '../Core/Matrix3',
-    '../Core/Matrix4',
-    '../Core/OrientedBoundingBox',
-    '../Core/PolygonGeometry',
-    '../Core/Quaternion',
-    '../Core/Ray',
-    '../Core/Rectangle',
-    '../Renderer/DrawCommand',
-    '../Renderer/Pass',
-    '../Renderer/RenderState',
-    '../Renderer/ShaderProgram',
-    '../Renderer/ShaderSource',
-    '../Shaders/ImageDrapingFS',
-    '../Shaders/ImageDrapingVS',
-    '../Shaders/ShadowVolumeFS',
-    '../Shaders/ShadowVolumeVS',
-    '../Scene/Material',
-    '../Scene/MaterialAppearance',
-    '../ThirdParty/when',
-    './BlendingState',
-    './DepthFunction',
-    './PerInstanceColorAppearance',
-    './Primitive',
-    './SceneMode',
-    './StencilFunction',
-    './StencilOperation'
-], function(
-    BoundingSphere,
-    buildModuleUrl,
-    Cartesian2,
-    Cartesian3,
-    Cartographic,
-    combine,
-    ColorGeometryInstanceAttribute,
-    defaultValue,
-    defined,
-    defineProperties,
-    destroyObject,
-    DeveloperError,
-    EncodedCartesian3,
-    Ellipsoid,
-    GeographicTilingScheme,
-    GeometryInstance,
-    IntersectionTests,
-    isArray,
-    loadJson,
-    CesiumMath,
-    Matrix3,
-    Matrix4,
-    OrientedBoundingBox,
-    PolygonGeometry,
-    Quaternion,
-    Ray,
-    Rectangle,
-    DrawCommand,
-    Pass,
-    RenderState,
-    ShaderProgram,
-    ShaderSource,
-    ImageDrapingFS,
-    ImageDrapingVS,
-    ShadowVolumeFS,
-    ShadowVolumeVS,
-    Material,
-    MaterialAppearance,
-    when,
-    BlendingState,
-    DepthFunction,
-    PerInstanceColorAppearance,
-    Primitive,
-    SceneMode,
-    StencilFunction,
-    StencilOperation) {
-
-    'use strict';
+import BoundingSphere from '../Core/BoundingSphere';
+import buildModuleUrl from '../Core/buildModuleUrl';
+import Cartesian2 from '../Core/Cartesian2';
+import Cartesian3 from '../Core/Cartesian3';
+import Cartographic from '../Core/Cartographic';
+// import combine from '../Core/combine';
+// import ColorGeometryInstanceAttribute from '../Core/ColorGeometryInstanceAttribute';
+import defaultValue from '../Core/defaultValue';
+import defined from '../Core/defined';
+import defineProperties from '../Core/defineProperties';
+import destroyObject from '../Core/destroyObject';
+import DeveloperError from '../Core/DeveloperError';
+// import EncodedCartesian3 from '../Core/EncodedCartesian3';
+import Ellipsoid from '../Core/Ellipsoid';
+import GeographicTilingScheme from '../Core/GeographicTilingScheme';
+import GeometryInstance from '../Core/GeometryInstance';
+import IntersectionTests from '../Core/IntersectionTests';
+import isArray from '../Core/isArray';
+// import loadJson from '../Core/loadJson';
+import Math from '../Core/Math';
+import Matrix3 from '../Core/Matrix3';
+// import Matrix4 from '../Core/Matrix4';
+import OrientedBoundingBox from '../Core/OrientedBoundingBox';
+import PolygonGeometry from '../Core/PolygonGeometry';
+import Quaternion from '../Core/Quaternion';
+import Ray from '../Core/Ray';
+import Rectangle from '../Core/Rectangle';
+import DrawCommand from '../Renderer/DrawCommand';
+import Pass from '../Renderer/Pass';
+import RenderState from '../Renderer/RenderState';
+import ShaderProgram from '../Renderer/ShaderProgram';
+import ShaderSource from '../Renderer/ShaderSource';
+// import ImageDrapingFS from '../Shaders/ImageDrapingFS';
+// import ImageDrapingVS from '../Shaders/ImageDrapingVS';
+import ShadowVolumeFS from '../Shaders/ShadowVolumeFS';
+// import ShadowVolumeVS from '../Shaders/ShadowVolumeVS';
+import Material from '../Scene/Material';
+import MaterialAppearance from '../Scene/MaterialAppearance';
+import when from '../ThirdParty/when';
+import BlendingState from './BlendingState';
+import DepthFunction from './DepthFunction';
+// import PerInstanceColorAppearance from './PerInstanceColorAppearance';
+import Primitive from './Primitive';
+import SceneMode from './SceneMode';
+import StencilFunction from './StencilFunction';
+import StencilOperation from './StencilOperation';
+import CesiumMath from '../Core/Math';
+import ClassificationPrimitive from '../Scene/ClassificationPrimitive';
+import GroundPrimitive from '../Scene/GroundPrimitive';
+import ShadowVolumeAppearanceVS from '../Shaders/ShadowVolumeAppearanceVS';
+import Resource from '../Core/Resource';
 
     /**
      * An image draping primitive represents an image or video as viewed from a camera and draped over the globe primitive (ellipsoid or terrain) in the {@link Scene}.
@@ -243,10 +196,11 @@ define([
             var ray = new Ray(this._camPos, lookDir);
             var intersects = IntersectionTests.rayEllipsoid(ray, Ellipsoid.WGS84);
 
-            if (intersects == null) {
-                //ground = IntersectionTests.grazingAltitudeLocation(ray, Cesium.Ellipsoid.WGS84);
+            if (intersects === null) {
+                // ground = IntersectionTests.grazingAltitudeLocation(ray, Cesium.Ellipsoid.WGS84);
                 ground = Ray.getPoint(ray, 1000.0);
-            } else {
+            }
+            else {
                 ground = Ray.getPoint(ray, intersects.start);
             }
             coords[i] = ground;
@@ -259,7 +213,7 @@ define([
         });
 
         this.geometryInstances = new GeometryInstance({
-            geometry : geometry,
+            geometry : geometry
             /*id : 'rectangle',
             attributes : {
               color : new Cesium.ColorGeometryInstanceAttribute(0.0, 1.0, 1.0, 0.5)
@@ -323,6 +277,7 @@ define([
         });*/
 
         var readOnlyAttributes;
+        var readOnlyInstanceAttributesScratch = ['color'];
 
         if (defined(this.geometryInstances) && isArray(this.geometryInstances) && this.geometryInstances.length > 1) {
             readOnlyAttributes = readOnlyInstanceAttributesScratch;
@@ -344,8 +299,6 @@ define([
             _createPickOffsets : true
         };
     }
-
-    var readOnlyInstanceAttributesScratch = ['color'];
 
     defineProperties(ImageDrapingPrimitive.prototype, {
         /**
@@ -488,21 +441,21 @@ define([
     ImageDrapingPrimitive._terrainHeights = undefined;
     ImageDrapingPrimitive._terrainHeightsMaxLevel = 6;
 
-    function getComputeMaximumHeightFunction(primitive) {
+    ImageDrapingPrimitive.getComputeMaximumHeightFunction = function(primitive) {
         return function(granularity, ellipsoid) {
             var r = ellipsoid.maximumRadius;
             var delta = (r / Math.cos(granularity * 0.5)) - r;
             return primitive._maxHeight + delta;
         };
-    }
+    };
 
-    function getComputeMinimumHeightFunction(primitive) {
+    ImageDrapingPrimitive.getComputeMinimumHeightFunction = function(primitive) {
         return function(granularity, ellipsoid) {
             return primitive._minHeight;
         };
-    }
+    };
 
-    function getStencilPreloadRenderState(enableStencil) {
+    ImageDrapingPrimitive.getStencilPreloadRenderState = function(enableStencil) {
         return {
             colorMask : {
                 red : false,
@@ -532,9 +485,9 @@ define([
             },
             depthMask : false
         };
-    }
+    };
 
-    function getStencilDepthRenderState(enableStencil) {
+    ImageDrapingPrimitive.getStencilDepthRenderState = function(enableStencil) {
         return {
             colorMask : {
                 red : false,
@@ -565,9 +518,9 @@ define([
             },
             depthMask : false
         };
-    }
+    };
 
-    function getColorRenderState(enableStencil) {
+    ImageDrapingPrimitive.getColorRenderState = function(enableStencil) {
         return {
             stencilTest : {
                 enabled : enableStencil,
@@ -592,7 +545,7 @@ define([
             depthMask : false,
             blending : BlendingState.ALPHA_BLEND
         };
-    }
+    };
 
     var pickRenderState = {
         stencilTest : {
@@ -627,7 +580,7 @@ define([
     var scratchCorners = [new Cartographic(), new Cartographic(), new Cartographic(), new Cartographic()];
     var scratchTileXY = new Cartesian2();
 
-    function getRectangle(frameState, geometry) {
+    ImageDrapingPrimitive.getRectangle = function(frameState, geometry) {
         var ellipsoid = frameState.mapProjection.ellipsoid;
         if (!defined(geometry.attributes) || !defined(geometry.attributes.position3DHigh)) {
             if (defined(geometry.rectangle)) {
@@ -660,7 +613,7 @@ define([
         rectangle.east = maxLon;
         rectangle.west = minLon;
         return rectangle;
-    }
+    };
 
     var scratchDiagonalCartesianNE = new Cartesian3();
     var scratchDiagonalCartesianSW = new Cartesian3();
@@ -668,7 +621,7 @@ define([
     var scratchCenterCartesian = new Cartesian3();
     var scratchSurfaceCartesian = new Cartesian3();
 
-    function getTileXYLevel(rectangle) {
+    ImageDrapingPrimitive.getTileXYLevel = function(rectangle) {
         Cartographic.fromRadians(rectangle.east, rectangle.north, 0.0, scratchCorners[0]);
         Cartographic.fromRadians(rectangle.west, rectangle.north, 0.0, scratchCorners[1]);
         Cartographic.fromRadians(rectangle.east, rectangle.south, 0.0, scratchCorners[2]);
@@ -678,8 +631,8 @@ define([
         var lastLevelX = 0, lastLevelY = 0;
         var currentX = 0, currentY = 0;
         var maxLevel = ImageDrapingPrimitive._terrainHeightsMaxLevel;
-
-        for (var i = 0; i <= maxLevel; ++i) {
+        var i = 0;
+        for (i = 0; i <= maxLevel; ++i) {
             var failed = false;
 
             for (var j = 0; j < 4; ++j) {
@@ -712,10 +665,10 @@ define([
             y : lastLevelY,
             level : (i > maxLevel) ? maxLevel : (i - 1)
         };
-    }
+    };
 
-    function setMinMaxTerrainHeights(primitive, rectangle, ellipsoid) {
-        var xyLevel = getTileXYLevel(rectangle);
+    ImageDrapingPrimitive.setMinMaxTerrainHeights = function(primitive, rectangle, ellipsoid) {
+        var xyLevel = this.getTileXYLevel(rectangle);
         // Get the terrain min/max for that tile
         var minTerrainHeight = ImageDrapingPrimitive._defaultMinTerrainHeight;
         var maxTerrainHeight = ImageDrapingPrimitive._defaultMaxTerrainHeight;
@@ -749,12 +702,12 @@ define([
 
         primitive._minTerrainHeight = Math.max(ImageDrapingPrimitive._defaultMinTerrainHeight, minTerrainHeight);
         primitive._maxTerrainHeight = maxTerrainHeight;
-    }
+    };
 
     var scratchBoundingSphere = new BoundingSphere();
 
-    function getInstanceBoundingSphere(rectangle, ellipsoid) {
-        var xyLevel = getTileXYLevel(rectangle);
+    ImageDrapingPrimitive.getInstanceBoundingSphere = function(rectangle, ellipsoid) {
+        var xyLevel = this.getTileXYLevel(rectangle);
         // Get the terrain max for that tile
         var maxTerrainHeight = ImageDrapingPrimitive._defaultMaxTerrainHeight;
 
@@ -769,11 +722,11 @@ define([
         var result = BoundingSphere.fromRectangle3D(rectangle, ellipsoid, 0.0);
         BoundingSphere.fromRectangle3D(rectangle, ellipsoid, maxTerrainHeight, scratchBoundingSphere);
         return BoundingSphere.union(result, scratchBoundingSphere, result);
-    }
+    };
 
-    function createBoundingVolume(groundPrimitive, frameState, geometry) {
+    ImageDrapingPrimitive.createBoundingVolume = function(groundPrimitive, frameState, geometry) {
         var ellipsoid = frameState.mapProjection.ellipsoid;
-        var rectangle = getRectangle(frameState, geometry);
+        var rectangle = this.getRectangle(frameState, geometry);
 
         // Use an oriented bounding box by default, but switch to a bounding sphere if bounding box creation would fail.
         if (rectangle.width < CesiumMath.PI) {
@@ -791,22 +744,22 @@ define([
             Cartesian3.fromElements(boundingVolume.center.z, boundingVolume.center.x, boundingVolume.center.y, boundingVolume.center);
             groundPrimitive._boundingVolumes2D.push(boundingVolume);
         }
-    }
+    };
 
-    function createRenderStates(groundPrimitive, context, appearance, twoPasses) {
+    ImageDrapingPrimitive.createRenderStates = function(groundPrimitive, context, appearance, twoPasses) {
 
         if (defined(groundPrimitive._rsStencilPreloadPass)) {
             return;
         }
 
         var stencilEnabled = !groundPrimitive.debugShowShadowVolume;
-        groundPrimitive._rsStencilPreloadPass = RenderState.fromCache(getStencilPreloadRenderState(stencilEnabled));
-        groundPrimitive._rsStencilDepthPass = RenderState.fromCache(getStencilDepthRenderState(stencilEnabled));
-        groundPrimitive._rsColorPass = RenderState.fromCache(getColorRenderState(stencilEnabled));
+        groundPrimitive._rsStencilPreloadPass = RenderState.fromCache(this.getStencilPreloadRenderState(stencilEnabled));
+        groundPrimitive._rsStencilDepthPass = RenderState.fromCache(this.getStencilDepthRenderState(stencilEnabled));
+        groundPrimitive._rsColorPass = RenderState.fromCache(this.getColorRenderState(stencilEnabled));
         groundPrimitive._rsPickPass = RenderState.fromCache(pickRenderState);
-    }
+    };
 
-    function modifyForEncodedNormals(primitive, vertexShaderSource) {
+    ImageDrapingPrimitive.modifyForEncodedNormals = function(primitive, vertexShaderSource) {
 
         if (!primitive.compressVertices) {
             return vertexShaderSource;
@@ -830,9 +783,9 @@ define([
                 '}';
             return [attributeDecl, globalDecl, modifiedVS, compressedMain].join('\n');
         }
-    }
+    };
 
-    function createShaderProgram(groundPrimitive, frameState, appearance) {
+    ImageDrapingPrimitive.createShaderProgram = function(groundPrimitive, frameState, appearance) {
 
         if (defined(groundPrimitive._sp)) {
             return;
@@ -840,13 +793,13 @@ define([
 
         var context = frameState.context;
         var primitive = groundPrimitive._primitive;
-        var vs = ShadowVolumeVS;
+        var vs = ShadowVolumeAppearanceVS;
         vs = groundPrimitive._primitive._batchTable.getVertexShaderCallback()(vs);
         vs = Primitive._appendShowToShader(primitive, vs);
         vs = Primitive._appendDistanceDisplayConditionToShader(primitive, vs);
         vs = Primitive._modifyShaderPosition(groundPrimitive, vs, frameState.scene3DOnly);
         vs = Primitive._updateColorAttribute(primitive, vs);
-        vs = modifyForEncodedNormals(primitive, vs);
+        vs = ClassificationPrimitive.modifyForEncodedNormals(primitive, vs);
         var fs = ShadowVolumeFS;
         var attributeLocations = groundPrimitive._primitive._attributeLocations;
         groundPrimitive._sp = ShaderProgram.replaceCache({
@@ -880,9 +833,9 @@ define([
                 attributeLocations : attributeLocations
             });
         }
-    }
+    };
 
-    function createColorCommands(groundPrimitive, appearance, material, colorCommands) {
+    ImageDrapingPrimitive.createColorCommands = function(groundPrimitive, appearance, material, colorCommands) {
         var primitive = groundPrimitive._primitive;
         // Create uniform map by combining uniforms from the appearance and material if either have uniforms.
         /*var materialUniformMap = defined(material) ? material._uniforms : undefined;
@@ -959,9 +912,9 @@ define([
             command.uniformMap = uniformMap;
             command.pass = Pass.GROUND;
         }
-    }
+    };
 
-    function createPickCommands(groundPrimitive, pickCommands) {
+    ImageDrapingPrimitive.createPickCommands = function(groundPrimitive, pickCommands) {
         var primitive = groundPrimitive._primitive;
         var pickOffsets = primitive._pickOffsets;
         var length = pickOffsets.length * 3;
@@ -991,7 +944,7 @@ define([
             command.renderState = groundPrimitive._rsStencilPreloadPass;
             command.shaderProgram = groundPrimitive._sp;
             command.uniformMap = uniformMap;
-            command.pass = Pass.GROUND;
+            command.pass = Pass.TERRAIN_CLASSIFICATION;
 
             // stencil depth command
             command = pickCommands[j + 1];
@@ -1009,7 +962,7 @@ define([
             command.renderState = groundPrimitive._rsStencilDepthPass;
             command.shaderProgram = groundPrimitive._sp;
             command.uniformMap = uniformMap;
-            command.pass = Pass.GROUND;
+            command.pass = Pass.TERRAIN_CLASSIFICATION;
 
             // color command
             command = pickCommands[j + 2];
@@ -1027,16 +980,16 @@ define([
             command.renderState = groundPrimitive._rsPickPass;
             command.shaderProgram = groundPrimitive._spPick;
             command.uniformMap = uniformMap;
-            command.pass = Pass.GROUND;
+            command.pass = Pass.TERRAIN_CLASSIFICATION;
         }
-    }
+    };
 
-    function createCommands(groundPrimitive, appearance, material, translucent, twoPasses, colorCommands, pickCommands) {
-        createColorCommands(groundPrimitive, appearance, material, colorCommands);
-        createPickCommands(groundPrimitive, pickCommands);
-    }
+    ImageDrapingPrimitive.createCommands = function(groundPrimitive, appearance, material, translucent, twoPasses, colorCommands, pickCommands) {
+        ClassificationPrimitive.createColorCommands(groundPrimitive, appearance, material, colorCommands);
+        ClassificationPrimitive.createPickCommands(groundPrimitive, pickCommands);
+    };
 
-    function updateAndQueueCommands(groundPrimitive, frameState, colorCommands, pickCommands, modelMatrix, cull, debugShowBoundingVolume, twoPasses) {
+    ImageDrapingPrimitive.updateAndQueueCommands = function(groundPrimitive, frameState, colorCommands, pickCommands, modelMatrix, cull, debugShowBoundingVolume, twoPasses) {
 
         var boundingVolumes;
         if (frameState.mode === SceneMode.SCENE3D) {
@@ -1082,7 +1035,7 @@ define([
                 commandList.push(pickCommands[k], pickCommands[k + 1], pickCommands[k + 2]);
             }
         }
-    }
+    };
 
     ImageDrapingPrimitive._initialized = false;
     ImageDrapingPrimitive._initPromise = undefined;
@@ -1101,7 +1054,12 @@ define([
             return initPromise;
         }
 
-        ImageDrapingPrimitive._initPromise = loadJson(buildModuleUrl('Assets/approximateTerrainHeights.json')).then(function(json) {
+        // ImageDrapingPrimitive._initPromise = loadJson(buildModuleUrl('Assets/approximateTerrainHeights.json')).then(function(json) {
+        //     ImageDrapingPrimitive._initialized = true;
+        //     ImageDrapingPrimitive._terrainHeights = json;
+        // });
+
+        ImageDrapingPrimitive._initPromise = Resource.fetchJson(buildModuleUrl('Assets/approximateTerrainHeights.json')).then(function(json) {
             ImageDrapingPrimitive._initialized = true;
             ImageDrapingPrimitive._terrainHeights = json;
         });
@@ -1151,26 +1109,24 @@ define([
             var length = instances.length;
             var groundInstances = new Array(length);
             var i;
-            var color;
+            // var color;
 
             var rectangle;
             for (i = 0; i < length; ++i) {
                 instance = instances[i];
                 geometry = instance.geometry;
-                var instanceRectangle = getRectangle(frameState, geometry);
+                var instanceRectangle = GroundPrimitive.getRectangle(frameState, geometry);
 
                 if (!defined(rectangle)) {
                     rectangle = instanceRectangle;
-                } else {
-                    if (defined(instanceRectangle)) {
+                } else if (defined(instanceRectangle)) {
                         Rectangle.union(rectangle, instanceRectangle, rectangle);
-                    }
                 }
 
                 var id = instance.id;
 
                 if (defined(id) && defined(instanceRectangle)) {
-                    var boundingSphere = getInstanceBoundingSphere(instanceRectangle, ellipsoid);
+                    var boundingSphere = ImageDrapingPrimitive.getInstanceBoundingSphere(instanceRectangle, ellipsoid);
                     this._boundingSpheresKeys.push(id);
                     this._boundingSpheres.push(boundingSphere);
                 }
@@ -1178,7 +1134,7 @@ define([
                 instanceType = geometry.constructor;
 
                 if (defined(instanceType) && defined(instanceType.createShadowVolume)) {
-                    var attributes = instance.attributes;
+                    // var attributes = instance.attributes;
                     //>>includeStart('debug', pragmas.debug);
 
                     /*if (!defined(attributes) || !defined(attributes.color)) {
@@ -1201,7 +1157,7 @@ define([
             }
 
             // Now compute the min/max heights for the primitive
-            setMinMaxTerrainHeights(this, rectangle, frameState.mapProjection.ellipsoid);
+            ImageDrapingPrimitive.setMinMaxTerrainHeights(this, rectangle, frameState.mapProjection.ellipsoid);
 
             var exaggeration = frameState.terrainExaggeration;
             this._minHeight = this._minTerrainHeight * exaggeration;
@@ -1212,8 +1168,8 @@ define([
                 geometry = instance.geometry;
                 instanceType = geometry.constructor;
                 groundInstances[i] = new GeometryInstance({
-                    geometry : instanceType.createShadowVolume(geometry, getComputeMinimumHeightFunction(this),
-                        getComputeMaximumHeightFunction(this)),
+                    geometry : instanceType.createShadowVolume(geometry, GroundPrimitive.getComputeMinimumHeightFunction(this),
+                        GroundPrimitive.getComputeMaximumHeightFunction(this)),
                     attributes : instance.attributes,
                     id : instance.id,
                     pickPrimitive : this
@@ -1222,23 +1178,23 @@ define([
 
             primitiveOptions.geometryInstances = groundInstances;
             primitiveOptions._createBoundingVolumeFunction = function(frameState, geometry) {
-                createBoundingVolume(that, frameState, geometry);
+                GroundPrimitive.createBoundingVolume(that, frameState, geometry);
             };
 
             primitiveOptions._createRenderStatesFunction = function(primitive, context, appearance, twoPasses) {
-                createRenderStates(that, context, appearance);
+                primitive.createRenderStates(that, context, appearance);
             };
 
             primitiveOptions._createShaderProgramFunction = function(primitive, frameState, appearance) {
-                createShaderProgram(that, frameState, appearance);
+                primitive.createShaderProgram(that, frameState, appearance);
             };
 
             primitiveOptions._createCommandsFunction = function(primitive, appearance, material, translucent, twoPasses, colorCommands, pickCommands) {
-                createCommands(that, appearance, material, true, false, colorCommands, pickCommands);
+                primitive.createCommands(that, appearance, material, true, false, colorCommands, pickCommands);
             };
 
             primitiveOptions._updateAndQueueCommandsFunction = function(primitive, frameState, colorCommands, pickCommands, modelMatrix, cull, debugShowBoundingVolume, twoPasses) {
-                updateAndQueueCommands(that, frameState, colorCommands, pickCommands, modelMatrix, cull, debugShowBoundingVolume, twoPasses);
+                primitive.updateAndQueueCommands(that, frameState, colorCommands, pickCommands, modelMatrix, cull, debugShowBoundingVolume, twoPasses);
             };
 
             this._primitive = new Primitive(primitiveOptions);
@@ -1261,14 +1217,14 @@ define([
 
         if (this.debugShowShadowVolume && !this._debugShowShadowVolume && this._ready) {
             this._debugShowShadowVolume = true;
-            this._rsStencilPreloadPass = RenderState.fromCache(getStencilPreloadRenderState(false));
-            this._rsStencilDepthPass = RenderState.fromCache(getStencilDepthRenderState(false));
-            this._rsColorPass = RenderState.fromCache(getColorRenderState(false));
+            this._rsStencilPreloadPass = RenderState.fromCache(ClassificationPrimitive.getStencilPreloadRenderState(false));
+            this._rsStencilDepthPass = RenderState.fromCache(ClassificationPrimitive.getStencilDepthRenderState(false));
+            this._rsColorPass = RenderState.fromCache(ClassificationPrimitive.getColorRenderState(false));
         } else if (!this.debugShowShadowVolume && this._debugShowShadowVolume) {
             this._debugShowShadowVolume = false;
-            this._rsStencilPreloadPass = RenderState.fromCache(getStencilPreloadRenderState(true));
-            this._rsStencilDepthPass = RenderState.fromCache(getStencilDepthRenderState(true));
-            this._rsColorPass = RenderState.fromCache(getColorRenderState(true));
+            this._rsStencilPreloadPass = RenderState.fromCache(ClassificationPrimitive.getStencilPreloadRenderState(true));
+            this._rsStencilDepthPass = RenderState.fromCache(ClassificationPrimitive.getStencilDepthRenderState(true));
+            this._rsColorPass = RenderState.fromCache(ClassificationPrimitive.getColorRenderState(true));
         }
 
         this._primitive.debugShowBoundingVolume = this.debugShowBoundingVolume;
@@ -1352,8 +1308,5 @@ define([
         this._spPick = this._spPick && this._spPick.destroy();
         return destroyObject(this);
     };
-
-    return ImageDrapingPrimitive;
-});
 
 export default ImageDrapingPrimitive;
