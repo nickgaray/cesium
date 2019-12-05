@@ -221,7 +221,7 @@ import ShadowVolumeAppearance from './ShadowVolumeAppearance.js';
         this._zIndex = undefined;
 
         var myUniforms = GroundPrimitiveUniformMap;
-        if (appearance !== undefined && appearance.uniforms !== undefined) {
+        if (appearance !== undefined && appearance.material !== undefined && appearance.material.uniforms !== undefined) {
             myUniforms = appearance.uniforms;
         }
 
