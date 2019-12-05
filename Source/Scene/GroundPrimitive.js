@@ -220,11 +220,6 @@ import ShadowVolumeAppearance from './ShadowVolumeAppearance.js';
         // Used when inserting in an OrderedPrimitiveCollection
         this._zIndex = undefined;
 
-        var myUniforms = GroundPrimitiveUniformMap;
-        if (appearance !== undefined && appearance.material !== undefined && appearance.material.uniforms !== undefined) {
-            myUniforms = appearance.uniforms;
-        }
-
         var that = this;
         this._classificationPrimitiveOptions = {
             geometryInstances : undefined,
@@ -239,8 +234,7 @@ import ShadowVolumeAppearance from './ShadowVolumeAppearance.js';
             _updateAndQueueCommandsFunction : undefined,
             _pickPrimitive : that,
             _extruded : true,
-            _uniformMap : myUniforms
-            // _uniformMap : GroundPrimitiveUniformMap
+            _uniformMap : GroundPrimitiveUniformMap
         };
     }
 
