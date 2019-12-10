@@ -6,6 +6,7 @@ vec4 windowToEye(vec4 fragCoord)
 {
     vec2 uv = fragCoord.xy / czm_viewport.zw;
     float z_window = czm_unpackDepth(texture2D(czm_globeDepthTexture, uv));
+    z_window = 7000000.0;
 
     if (z_window == 0.0)
         discard;
@@ -36,7 +37,6 @@ vec4 windowToEye(vec4 fragCoord)
 void main()
 {
     vec3 positionToEyeEC = -v_positionEC;
-    positionToEyeEC.z = 7000000.0;
 
     // get fragment 3D pos in eye coordinates using depth buffer value at fragment location
     vec4 v_posEC = windowToEye(gl_FragCoord);
@@ -53,19 +53,19 @@ void main()
 //        discard;
 
     // undistort
-//    float xn = lookRay.x / lookRay.z;
-//    float yn = lookRay.y / lookRay.z;
-//    float k1 = camDistR_5[0];
-//    float k2 = camDistR_5[1];
-//    float k3 = camDistR_5[2];
-//    float p1 = camDistT_6[0];
-//    float p2 = camDistT_6[1];
-//
-//    float r2 = xn * xn+ yn * yn;
-//    float r4 = r2 * r2;
-//    float r6 = r4 * r2;
-//    float xd = xn * (1. + k1 * r2 + k2 * r4 + k3 * r6) + 2. * p1 * xn * yn + p2 * (r2 + 2. * xn * xn);
-//    float yd = yn * (1. + k1 * r2 + k2 * r4 + k3 * r6) + 2. * p2 * xn * yn + p1 * (r2 + 2. * yn * yn);
+    float xn = lookRay.x / lookRay.z;
+    float yn = lookRay.y / lookRay.z;
+    float k1 = camDistR_5[0];
+    float k2 = camDistR_5[1];
+    float k3 = camDistR_5[2];
+    float p1 = camDistT_6[0];
+    float p2 = camDistT_6[1];
+
+    float r2 = xn * xn+ yn * yn;
+    float r4 = r2 * r2;
+    float r6 = r4 * r2;
+    float xd = xn * (1. + k1 * r2 + k2 * r4 + k3 * r6) + 2. * p1 * xn * yn + p2 * (r2 + 2. * xn * xn);
+    float yd = yn * (1. + k1 * r2 + k2 * r4 + k3 * r6) + 2. * p2 * xn * yn + p1 * (r2 + 2. * yn * yn);
 
     // project with pinhole model
     vec3 st = camProj_4 * vec3(xd, yd, 1.);
@@ -83,4 +83,5 @@ void main()
 
     //float depth = pow(v_posEC.z * 0.5 + 0.5, 8.0);
     //gl_FragColor = vec4(depth, depth, depth, 1.0);
+    gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
 }
