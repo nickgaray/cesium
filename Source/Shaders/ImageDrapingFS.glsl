@@ -68,8 +68,8 @@ void main()
 //    float yd = yn * (1. + k1 * r2 + k2 * r4 + k3 * r6) + 2. * p2 * xn * yn + p1 * (r2 + 2. * yn * yn);
 
     // project with pinhole model
-//    vec3 st = camProj_4 * vec3(xd, yd, 1.);
-//    st.y = 1.0 - st.y;
+    vec3 st = camProj_4 * vec3(xd, yd, 1.);
+    st.y = 1.0 - st.y;
 
 //    if (st.x < 0.0 || st.x > 1.0 || st.y < 0.0 || st.y > 1.0)
 //        discard;
