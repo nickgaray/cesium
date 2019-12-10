@@ -8,8 +8,8 @@ vec4 windowToEye(vec4 fragCoord)
     float z_window = czm_unpackDepth(texture2D(czm_globeDepthTexture, uv));
     z_window = 7000000.0;
 
-    if (z_window == 0.0)
-        discard;
+//    if (z_window == 0.0)
+//        discard;
 
     vec4 eyeCoordinate = czm_windowToEyeCoordinates(fragCoord.xy, z_window);
 
@@ -46,7 +46,7 @@ void main()
     vec4 v_posCam = v_posEC - camPosEC;
 
     // rotate to video cam frame
-//    vec3 lookRay = camAtt_3 * czm_inverseViewRotation3D * v_posCam.xyz;
+    vec3 lookRay = camAtt_3 * czm_inverseViewRotation3D * v_posCam.xyz;
 
     // discard if behind camera
 //    if (lookRay.z < 0.1)
