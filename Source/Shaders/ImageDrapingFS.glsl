@@ -10,7 +10,7 @@ vec4 windowToEye(vec4 fragCoord)
     if (z_window == 0.0)
         discard;
 
-    vec4 eyeCoordinate = czm_windowToEyeCoordinates(fragCoord.xy, globeDepth);
+    vec4 eyeCoordinate = czm_windowToEyeCoordinates(fragCoord.xy, z_window);
 
     return eyeCoordinate;
 
