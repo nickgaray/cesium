@@ -6,7 +6,6 @@ vec4 windowToEye(vec4 fragCoord)
 {
     vec2 uv = fragCoord.xy / czm_viewport.zw;
     float z_window = czm_unpackDepth(texture2D(czm_globeDepthTexture, uv));
-    z_window = 7000000.0;
 
 //    if (z_window == 0.0)
 //        discard;
@@ -71,8 +70,8 @@ void main()
     vec3 st = camProj_4 * vec3(xd, yd, 1.);
     st.y = 1.0 - st.y;
 
-//    if (st.x < 0.0 || st.x > 1.0 || st.y < 0.0 || st.y > 1.0)
-//        discard;
+    if (st.x < 0.0 || st.x > 1.0 || st.y < 0.0 || st.y > 1.0)
+        discard;
 
     // get color from material
     czm_materialInput materialInput;
