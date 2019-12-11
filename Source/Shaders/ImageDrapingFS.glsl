@@ -13,21 +13,6 @@ vec4 windowToEye(vec4 fragCoord)
     vec4 eyeCoordinate = czm_windowToEyeCoordinates(fragCoord.xy, z_window);
 
     return eyeCoordinate;
-
-//  float near = czm_depthRange.near;
-//  float far = czm_depthRange.far;
-//
-//  vec3 ndcPos;
-//  ndcPos.x = 2.0 * (fragCoord.x - czm_viewport.x) / czm_viewport.z - 1.0;
-//  ndcPos.y = 2.0 * (fragCoord.y - czm_viewport.y) / czm_viewport.w - 1.0;
-//  ndcPos.z = (2.0 * z_window - near - far) / (far - near);
-//
-//  vec4 clipPos;
-//  clipPos.w = czm_projection[3][2] / (ndcPos.z - (czm_projection[2][2] / czm_projection[2][3]));
-//  clipPos.xyz = ndcPos * clipPos.w;
-//
-//  return czm_inverseProjection * clipPos;
-//  return vec4(ndcPos, 1.0);
 }
 
 // Camera model and frames are based on OpenCV conventions:
@@ -42,14 +27,14 @@ void main()
 
     // translate to video cam frame
     vec4 camPosEC = czm_modelViewRelativeToEye * czm_translateRelativeToEye(camPosHigh_1, camPosLow_2);
-    vec4 v_posCam = v_posEC; // - camPosEC;
+    vec4 v_posCam = v_posEC - camPosEC;
 
     // rotate to video cam frame
     vec3 lookRay = camAtt_3 * czm_inverseViewRotation3D * v_posCam.xyz;
 
     // discard if behind camera
-    if (lookRay.z < 0.1)
-        discard;
+//    if (lookRay.z < 0.1)
+//        discard;
 
     // undistort
     float xn = lookRay.x / lookRay.z;
@@ -70,8 +55,8 @@ void main()
     vec3 st = camProj_4 * vec3(xd, yd, 1.);
     st.y = 1.0 - st.y;
 
-    if (st.x < 0.0 || st.x > 1.0 || st.y < 0.0 || st.y > 1.0)
-        discard;
+//    if (st.x < 0.0 || st.x > 1.0 || st.y < 0.0 || st.y > 1.0)
+//        discard;
 
     // get color from material
     czm_materialInput materialInput;
@@ -82,5 +67,4 @@ void main()
 
     //float depth = pow(v_posEC.z * 0.5 + 0.5, 8.0);
     //gl_FragColor = vec4(depth, depth, depth, 1.0);
-//    gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
 }
