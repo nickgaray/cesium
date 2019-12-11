@@ -42,14 +42,14 @@ void main()
 
     // translate to video cam frame
     vec4 camPosEC = czm_modelViewRelativeToEye * czm_translateRelativeToEye(camPosHigh_1, camPosLow_2);
-    vec4 v_posCam = v_posEC - camPosEC;
+    vec4 v_posCam = v_posEC; // - camPosEC;
 
     // rotate to video cam frame
     vec3 lookRay = camAtt_3 * czm_inverseViewRotation3D * v_posCam.xyz;
 
     // discard if behind camera
-//    if (lookRay.z < 0.1)
-//        discard;
+    if (lookRay.z < 0.1)
+        discard;
 
     // undistort
     float xn = lookRay.x / lookRay.z;
