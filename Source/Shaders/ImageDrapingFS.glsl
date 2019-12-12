@@ -7,12 +7,12 @@ vec4 windowToEye(vec4 fragCoord)
     vec2 uv = fragCoord.xy / czm_viewport.zw;
     float z_window = czm_unpackDepth(texture2D(czm_globeDepthTexture, uv));
 
-//    if (z_window == 0.0)
-//        discard;
+    if (z_window == 0.0)
+        discard;
 
     vec4 eyeCoordinate = czm_windowToEyeCoordinates(fragCoord.xy, z_window);
 
-    return eyeCoordinate;
+    return eyeCoordinate / eyeCoordinate.w;
 }
 
 // Camera model and frames are based on OpenCV conventions:
@@ -33,8 +33,8 @@ void main()
     vec3 lookRay = camAtt_3 * czm_inverseViewRotation3D * v_posCam.xyz;
 
     // discard if behind camera
-//    if (lookRay.z < 0.1)
-//        discard;
+    if (lookRay.z < 0.1)
+        discard;
 
     // undistort
     float xn = lookRay.x / lookRay.z;
@@ -55,8 +55,8 @@ void main()
     vec3 st = camProj_4 * vec3(xd, yd, 1.);
     st.y = 1.0 - st.y;
 
-//    if (st.x < 0.0 || st.x > 1.0 || st.y < 0.0 || st.y > 1.0)
-//        discard;
+    if (st.x < 0.0 || st.x > 1.0 || st.y < 0.0 || st.y > 1.0)
+        discard;
 
     // get color from material
     czm_materialInput materialInput;
