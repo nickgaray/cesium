@@ -7,8 +7,8 @@ vec4 windowToEye(vec4 fragCoord)
     vec2 uv = fragCoord.xy / czm_viewport.zw;
     float z_window = czm_unpackDepth(texture2D(czm_globeDepthTexture, uv));
 
-//    if (z_window == 0.0)
-//        discard;
+    if (z_window == 0.0)
+        discard;
 
     vec4 eyeCoordinate = czm_windowToEyeCoordinates(fragCoord.xy, z_window);
 
