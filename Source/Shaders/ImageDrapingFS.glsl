@@ -33,7 +33,7 @@ void main()
     vec3 lookRay = camAtt_3 * czm_inverseViewRotation3D * v_posCam.xyz;
 
     // discard if behind camera
-    if (lookRay.z < 0.1)
+    if (lookRay.z < 0.0001)
         discard;
 
     // undistort
